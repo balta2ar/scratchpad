@@ -1,0 +1,19 @@
+leetcode stats
+
+
+Solved total: 4
+
+
+2018, May
+05.17: 1 2
+05.20: 3 (brute, 05.21 sliding window)
+05.27: 4
+
+
+Looked up hints for:
+3
+
+
+Looked up solution for:
+4
+
