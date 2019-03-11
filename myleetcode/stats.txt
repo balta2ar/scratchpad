@@ -1,22 +1,48 @@
+# login
+cat ~/.leetcode | leetcode user -l
+
+# show problem
+leetcode show 62 -gx -l python3
+
+# create a directory with the same name as python file, use after show
+ls | \grep py | sed -e 's/.python3.py//' -e 's/[-.]/_/g' -e 's/^/0/' | xargs mkdir
+
 leetcode stats
 
 
-Solved total: 10
+Solved total: 23
 
 
-2018, May
+2018, May: 5
 05.17: 1 2
 05.20: 3 (brute, 05.21 sliding window)
 05.27: 4 (read explanation, solution)
 05.28: 5
+
+2018, June: 15
 06.03: 6, 7, 8, 9
-06.11: 10 (regular expressions using star)
+06.11: 10 (DP), 11
+06.13: 12 (subtract one by one left to right)
+06.16: 13
+06.18: 32 (DP, Kadane's)
+06.24: 53, 62, 63, 64, 70
+06.27: 72 (DP, edit distance)
+
+2018, July: 2
+07.07: 85 (DP, stack), 87 (DP, recursion)
+
+2019, February: 1
+02.05: 15 (3SUM)
+02.05: 16 (3SUM)
+02.05: 17 (letter cominations of phone number)
+03.10: 19 (remove nth node from the end of list)
+03.11: 20 (valid parenthesis (easy))
 
 
-Looked up hints for:
+Looked up hints for: 1
 3
 
 
-Looked up solution for:
-4, 10
+Looked up solution for: 7
+4, 10, 11, 12, 32, 53, 72, 15, 16
 

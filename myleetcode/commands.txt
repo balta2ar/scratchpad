@@ -1,0 +1,10 @@
+
+# Login
+cat ~/.leetcode | leetcode user -l
+
+# Download and save a problem by number
+leetcode show 87 -gx -l python3
+
+# Create folders from python files
+ls | \grep py | sed -e 's/.python3.py//' -e 's/\.py//' -e 's/[-.]/_/g' -e 's/^/0/' | xargs mkdir
+
