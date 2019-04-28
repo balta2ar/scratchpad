@@ -37,6 +37,13 @@ Solved total: 23
 02.05: 17 (letter cominations of phone number)
 03.10: 19 (remove nth node from the end of list)
 03.11: 20 (valid parenthesis (easy))
+03.16: 21 (merge two sorted lists (easy))
+       88 (merge two sorted arrays (easy))
+       23 (merge k sorted lists (hard))
+       264 (ugly numbers II (medium))
+03.19: 25 (reverse nodes in k group (hard))
+       24 (reverse nodes in pairs (medium))
+04.28: 30 (substring with concatenation of all words)
 
 
 Looked up hints for: 1
