@@ -6,7 +6,8 @@ cat ~/.leetcode | leetcode user -l
 leetcode show 87 -gx -l python3
 
 # Create folders from python files
-ls | \grep py | sed -e 's/.python3.py//' -e 's/\.py//' -e 's/[-.]/_/g' -e 's/^/0/' | xargs mkdir
+# ls | \grep py | sed -e 's/.python3.py//' -e 's/\.py//' -e 's/[-.]/_/g' -e 's/^/0/' | xargs mkdir
+ls | \grep py | sed -e 's/.python3.py//' -e 's/\.py//' -e 's/[-.]/_/g' -e 's/^\([0-9][0-9]_\)/0\1/' | xargs mkdir
 
 # How many solved per month (based on mtime of a dir)
 find . -maxdepth 1 -type d -printf "%TY-%Tm %p\n" | \grep '/' | cut -f1 -d' ' | sort | uniq -c

@@ -43,8 +43,9 @@ Solved total: 23
        264 (ugly numbers II (medium))
 03.19: 25 (reverse nodes in k group (hard))
        24 (reverse nodes in pairs (medium))
-04.28: 30 (substring with concatenation of all words)
-
+04.28: 30 (substring with concatenation of all words (hard))
+       76 (minimum window substring (hard))
+05.02: 279 (perfect squres (medium))
 
 Looked up hints for: 1
 3
