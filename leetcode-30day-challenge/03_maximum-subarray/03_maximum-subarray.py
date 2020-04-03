@@ -10,10 +10,10 @@ class Solution:
                 current_sum += nums[right]
                 best_sum = max(best_sum, current_sum)
                 right += 1
-            while (left < right and current_sum < 0) or (right == len(nums) and left < right):
+            while (left < right) and (current_sum < 0 or right == len(nums)):
                 current_sum -= nums[left]
                 left += 1
-                if right > left:
+                if left < right:
                     best_sum = max(best_sum, current_sum)
         return best_sum
 
