@@ -10,7 +10,7 @@ ls | \grep py | sed -e 's/.python3.py//' -e 's/[-.]/_/g' -e 's/^/0/' | xargs mkd
 leetcode stats
 
 
-Solved total: 23
+Solved total: 24
 
 
 2018, May: 5
@@ -46,6 +46,9 @@ Solved total: 23
 04.28: 30 (substring with concatenation of all words (hard))
        76 (minimum window substring (hard))
 05.02: 279 (perfect squres (medium))
+
+2020, April: 1
+04.04: 994 (rotting oranges, easy, bfs)
 
 Looked up hints for: 1
 3
