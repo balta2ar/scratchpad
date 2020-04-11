@@ -12,41 +12,20 @@ class TreeNode:
 
 
 class Solution:
-    def computePaths(self, root):
-        paths = dict()
+    max = 0
+    def diameterOfBinaryTree(self, node: TreeNode) -> int:
+        self.max = 0
+        self.maxDepth(node)
+        return self.max
 
-        def helper(node, path):
-            if not node:
-                return
-            current = path[:] + [node]
-            paths[node] = current
-            if node.left:
-                helper(node.left, current)
-            if node.right:
-                helper(node.right, current)
+    def maxDepth(self, node):
+        if not node:
+            return 0
 
-        helper(root, [])
-        return paths
-
-    def dist(self, path1, path2):
-        i1, i2 = 0, 0
-        while i1 < len(path1) and i2 < len(path2):
-            if path1[i1] == path2[i2]:
-                i1, i2 = i1+1, i2+1
-            else:
-                break
-        return len(path1)-i1 + len(path2)-i2
-
-    def diameterOfBinaryTree(self, root: TreeNode) -> int:
-        paths = list(self.computePaths(root).values())
-        #print(paths)
-        best = 0
-        for i in range(len(paths)):
-            for j in range(i+1, len(paths)):
-                d = self.dist(paths[i], paths[j])
-                #print(d)
-                best = max(d, best)
-        return best
+        left = self.maxDepth(node.left)
+        right = self.maxDepth(node.right)
+        self.max = max(self.max, left+right)
+        return max(left, right) + 1
 
 
 def assert_eq(actual, expected):
@@ -65,3 +44,10 @@ if __name__ == '__main__':
     test(tree, 2)
 
     test(None, 0)
+
+    tree = TreeNode(1)
+    test(tree, 0)
+
+    tree = TreeNode(1)
+    tree.left = TreeNode(2)
+    test(tree, 1)
