@@ -1,5 +1,3 @@
-import random
-
 class Page:
     def __init__(self, local_depth, page_size):
         self.page_size = page_size
@@ -46,7 +44,7 @@ class ExtendibleHash:
         if page.get(key) != None:
             return page.update(key, value)
         if not page.full():
-            print('insert')
+            #print('insert')
             return page.insert(key, value)
         if page.local_depth < self.global_depth:
             self._redistribute(page, key)
@@ -57,26 +55,22 @@ class ExtendibleHash:
             return self.insert(key, value)
         raise RuntimeError('impossible condition: local_depth > global_depth')
     def _grow(self):
-        print('grow')
+        #print('grow')
         self.directory *= 2
         self.global_depth += 1
     def _redistribute(self, page, key):
-        print('redistribute')
+        #print('redistribute')
         d = page.local_depth
-        D = self.global_depth
-        d1 = d+1
-        p0 = Page(d1, self.page_size)
-        p1 = Page(d1, self.page_size)
-        def high_bit(key):
-            mask = 1 << (D-1)
-            return self._index(key) & mask
+        p0 = Page(d+1, self.page_size)
+        p1 = Page(d+1, self.page_size)
+        hb = 1<<d
         for k, v in page.items:
-            if high_bit(k) == 0: p0.insert(k, v)
+            # use index or hash directly here
+            if self._index(k) & hb == 0: p0.insert(k, v)
             else: p1.insert(k, v)
         # there are 2**(D-d) directory entries that use this page
-        mask = (1<<d)-1
-        hb = 1<<(D-1)
-        for index in range(self._index(key) & mask, len(self.directory), 1<<d):
+        mask = hb-1
+        for index in range(self._index(key) & mask, len(self.directory), hb):
             if index & hb == 0: self.directory[index] = p0
             else: self.directory[index] = p1
     def get(self, key):
@@ -85,7 +79,7 @@ class ExtendibleHash:
         return self._get_page(key).remove(key)
 
 if __name__ == '__main__':
-    PAGE_SIZE = 2
+    PAGE_SIZE = 10
     h = ExtendibleHash(PAGE_SIZE)
     assert True == h.insert(1, 'a')
     assert True == h.insert(2, 'b')
@@ -99,6 +93,6 @@ if __name__ == '__main__':
     assert None == h.get(5)
     assert 'a' == h.get(1)
 
-    for i in range(100):
-        print(i)
-        h.insert(random.randint(0, 1000000), 'x')
+    for i in range(100000):
+        # print(i)
+        h.insert(i, 'x')
