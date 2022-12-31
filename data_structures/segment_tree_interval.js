@@ -1,8 +1,8 @@
 let intervals = null
 let tree = null
 let yOff = 0
-const yStep = 10
 let nIntervals = 0
+const yStep = 5
 
 function Node(b, e) {
     this.b = b
@@ -21,14 +21,14 @@ function Endpoint(v, ix) {
 function buildSegmentTree(intervals) {
     let tree = {}
 
-    _build = (s, t) => {
-        var v = new Node(s, t)
-        if (s+1 == t) { return v }
-        const m = Math.floor((s+t)/2)
-        v.key = m
-        v.left = _build(s, m)
-        v.right = _build(m, t)
-        return v
+    const cVisited = color(28, 228, 128)
+    const cBuilt = color(128, 128, 128)
+    const cOut = color(28, 128, 228)
+    const cBreak = color(228, 28, 228)
+    mark = (level, s, t, col, yBase, wOffset) => {
+        fill(col)
+        stroke(col)
+        rect(eps[s].v+wOffset, yBase+yStep*level, eps[t].v-eps[s].v-wOffset*2, 2)
     }
 
     eps = []
@@ -37,7 +37,20 @@ function buildSegmentTree(intervals) {
         eps.push(new Endpoint(end, ix))
     }
     eps.sort((a, b) => a.v - b.v)
-    let root = _build(0, eps.length-1)
+    for (let i = 0; i < eps.length-1; i++) { mark(0, i, i, cBreak, 10, -1) }
+
+    _build = (level, s, t) => {
+        var v = new Node(s, t)
+        mark(level, s, t, cBuilt, 20, 2)
+        if (s+1 == t) { return v }
+        const m = Math.floor((s+t)/2)
+        v.key = m
+        v.left = _build(level+1, s, m)
+        v.right = _build(level+1, m, t)
+        return v
+    }
+
+    let root = _build(0, 0, eps.length-1)
 
     _insert = (v, b, e) => {
         if ((b <= v.b) && (v.e <= e)) {
@@ -56,19 +69,23 @@ function buildSegmentTree(intervals) {
 
     _extend = (out, values) => { for (const v of values) { out.add(v) } }
     var numVisited = 0
-    _query = (v, q) => {
+    _query = (level, v, q) => {
         numVisited += 1
         var out = new Set()
         if (!v) { return out }
-        if ((eps[v.b].v <= q) && (q <= eps[v.e].v)) { _extend(out, v.aux) }
-        if (q <= eps[v.key].v) { _extend(out, _query(v.left, q)) }
-        if (q >= eps[v.key].v) { _extend(out, _query(v.right, q)) }
+        mark(level, v.b, v.e, cVisited, 20, 2)
+        if ((eps[v.b].v <= q) && (q <= eps[v.e].v)) {
+            if (v.aux.length > 0) { mark(level, v.b, v.e, cOut, 20, 2) }
+            _extend(out, v.aux)
+        }
+        if (q <= eps[v.key].v) { _extend(out, _query(level+1, v.left, q)) }
+        if (q >= eps[v.key].v) { _extend(out, _query(level+1, v.right, q)) }
         return out
     }
 
     tree.query = q => {
         numVisited = 0
-        return [Array.from(_query(root, q)), numVisited]
+        return [Array.from(_query(0, root, q)), numVisited]
     }
     return tree
 }
@@ -83,24 +100,13 @@ function randomIntervals(n) {
     return intervals;
 }
 
-function setup() {
-    //randomSeed(0)
-    yOff = 300
-    nIntervals = Math.floor((windowHeight - yOff) / (yStep))
-    intervals = randomIntervals(nIntervals)
-    tree = buildSegmentTree(intervals)
-
-    createCanvas(windowWidth,windowHeight)
-    background(255)
-}
-
 function drawIntervals(intervals, color) {
     drawingContext.setLineDash([10, 0])
     for (const [l, r, ix] of intervals) {
         fill(color)
         stroke(color)
         // line(l, yOff+yStep*ix, r, yOff+yStep*ix)
-        rect(l, yOff+yStep*ix, r-l, 5)
+        rect(l, yOff+yStep*ix, r-l, 2)
     }
 }
 
@@ -111,9 +117,21 @@ function drawCursor() {
     line(mouseX, 0, mouseX, height)
 }
 
+function setup() {
+    randomSeed(0)
+    yOff = 100
+    nIntervals = Math.floor((windowHeight - yOff) / (yStep)) * 1
+    intervals = randomIntervals(nIntervals)
+    // tree = buildSegmentTree(intervals)
+
+    createCanvas(windowWidth, windowHeight)
+    background(255)
+}
+
 function draw() {
     drawCursor()
     drawIntervals(intervals, color(0, 0, 0))
+    tree = buildSegmentTree(intervals)
     const [ivs, n] = tree.query(mouseX)
     drawIntervals(ivs, color(255, 0, 0))
 
@@ -121,5 +139,5 @@ function draw() {
     stroke(0)
     textSize(32)
     const label = `${n}/${intervals.length}`
-    text(label, 10, 30)
+    text(label, 10, windowHeight/4)
 }
