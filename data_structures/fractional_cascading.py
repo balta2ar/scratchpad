@@ -28,15 +28,21 @@ class FractionalCascading:
             pointers[i] = ps
         self.ms = ms
         self.pointers = pointers
+        from pprint import pprint
+        pprint(ms)
     def query(self, q):
         out = []
-        right, down = self.pointers[0][bisect_left(self.ms[0], q)]
+        ix = bisect_left(self.ms[0], q)
+        right, down = self.pointers[0][ix]
+        v = self.ms[0][ix]
+        print(f'k=0 q={q} v={v} right={right} down={down}')
         out.append(right)
         for k in range(1, len(self.ms)):
             if q <= self.ms[k][down-1]:
                 right, down = self.pointers[k][down-1]
             else:
                 right, down = self.pointers[k][down]
+            print(f'k={k} q={q} v={v} right={right} down={down}')
             out.append(right)
         return out
 
@@ -75,6 +81,31 @@ def make_catalog(n, k):
     for _ in range(k):
         catalog.append(sorted([randint(0, max_value) for _ in range(n)]))
     return catalog, max_value
+
+def test_simple():
+    catalog = [
+        [1, 4, 9],
+        [2, 3, 7, 10],
+        [5, 6, 8, 9, 10, 11]
+    ]
+    naive = Naive(catalog)
+    fc = FractionalCascading(catalog)
+    test(fc, naive, 4)
+    test(fc, naive, 3)
+    test(fc, naive, 9)
+    test(fc, naive, 0)
+    test(fc, naive, 100)
+
+def test_simple2():
+    catalog = [
+        [1, 3, 7],
+        [2, 5, 9, 13, 25],
+        [7, 9, 12, 15],
+        [0, 4, 6, 10, 11],
+    ]
+    naive = Naive(catalog)
+    fc = FractionalCascading(catalog)
+    test(fc, naive, 11)
 
 def test_random():
     seed(time())
@@ -115,18 +146,7 @@ def bench_show(filename):
     fig.show()
 
 if __name__ == '__main__':
-    catalog = [
-        [1, 4, 9],
-        [2, 3, 7, 10],
-        [5, 6, 8, 9, 10, 11]
-    ]
-    naive = Naive(catalog)
-    fc = FractionalCascading(catalog)
-    test(fc, naive, 4)
-    test(fc, naive, 3)
-    test(fc, naive, 9)
-    test(fc, naive, 0)
-    test(fc, naive, 100)
-
+    # test_simple()
+    test_simple2()
     # test_random()
     # test_bench()
